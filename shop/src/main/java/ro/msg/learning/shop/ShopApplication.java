@@ -20,33 +20,4 @@ public class ShopApplication {
 	public static void main(final String[] args) throws FileNotFoundException {
 		SpringApplication.run(ShopApplication.class, args);
 	}
-
-	// TODO remove this
-	//	@Bean
-	//	public CommandLineRunner demo(final SupplierRepository repository) {
-	//		return (args) -> {
-	//			// save a few suppliers
-	//			repository.save(new Supplier("Jack"));
-	//			repository.save(new Supplier("Chloe"));
-	//			repository.save(new Supplier("Kim"));
-	//			repository.save(new Supplier("David"));
-	//			repository.save(new Supplier("Michelle"));
-	//
-	//			// fetch all suppliers
-	//			log.info("Suppliers found with findAll():");
-	//			log.info("-------------------------------");
-	//			for (final Supplier customer : repository.findAll()) {
-	//				log.info(customer.toString());
-	//			}
-	//			log.info("");
-	//
-	//			// fetch an individual supplier by ID
-	//			final Supplier customer = repository.findById(1).get();
-	//			log.info("Supplier found with findById(1L):");
-	//			log.info("--------------------------------");
-	//			log.info(customer.toString());
-	//			log.info("");
-	//
-	//		};
-	//	}
 }
