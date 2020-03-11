@@ -1,11 +1,14 @@
 package ro.msg.learning.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Order extends Identifiable {
 	@ManyToOne
-	private Location shippedFrom;
+	private Location locationShippedFrom;
 
 	@ManyToOne
 	private Customer customer;
@@ -30,6 +33,6 @@ public class Order extends Identifiable {
 	@Embedded
 	private Address address;
 
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<OrderDetail> orderDetails;
+//	@OneToMany(fetch = FetchType.LAZY)
+//	private List<OrderDetail> orderDetails;
 }
