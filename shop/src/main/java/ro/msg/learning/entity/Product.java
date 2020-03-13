@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +19,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonPropertyOrder({ "name", "description", "price", "weight", "category", "supplier", "imageUrl"})
+
 public class Product extends Identifiable{
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -30,9 +35,11 @@ public class Product extends Identifiable{
 	private Double weight;
 
 	@ManyToOne
+	@JsonUnwrapped
 	private ProductCategory category;
 
 	@ManyToOne
+	@JsonUnwrapped
 	private Supplier supplier;
 
 	@Column(name = "image_url")

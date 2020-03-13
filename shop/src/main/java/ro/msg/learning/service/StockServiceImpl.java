@@ -1,5 +1,7 @@
 package ro.msg.learning.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import ro.msg.learning.entity.Stock;
@@ -18,5 +20,10 @@ public class StockServiceImpl implements StockService {
 		final Stock retrievedStock = stockRepository.getStockByLocationAndProduct(location_id, product_id);
 		retrievedStock.setQuantity(retrievedStock.getQuantity() - quantityPurchased);
 		stockRepository.save(retrievedStock);
+	}
+
+	@Override
+	public List<Stock> getAllStocksForLocation(final Integer location_id) {
+		return stockRepository.getAllStocksForLocation(location_id);
 	}
 }

@@ -5,7 +5,11 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @AttributeOverrides({
@@ -15,6 +19,9 @@ import lombok.Data;
 	@AttributeOverride( name = "streetAddress", column = @Column(name = "street_address"))
 })
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonPropertyOrder({ "country", "city", "county", "streetAddress"})
 public class Address {
 	private String country;
 	private String city;

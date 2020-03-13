@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+
 
 @SpringBootApplication
 @EntityScan(basePackages = {"ro.msg.learning.entity"})  // scan JPA entities
@@ -26,6 +28,11 @@ public class ShopApplication {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
+	}
+
+	@Bean
+	public CsvMapper csvMapper() {
+		return new CsvMapper();
 	}
 
 	//	@Bean
