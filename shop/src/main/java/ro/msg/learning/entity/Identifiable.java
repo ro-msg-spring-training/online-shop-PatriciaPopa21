@@ -1,5 +1,6 @@
 package ro.msg.learning.entity;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,5 +16,6 @@ public abstract class Identifiable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
+	@Column(name = "id", nullable = false, unique = true)
 	protected Integer id;
 }

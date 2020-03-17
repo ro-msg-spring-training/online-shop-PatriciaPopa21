@@ -3,6 +3,7 @@ package ro.msg.learning.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Revenue extends Identifiable{
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Location location;
 
 	@Column(name = "date", nullable = false)

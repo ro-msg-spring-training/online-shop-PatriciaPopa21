@@ -11,19 +11,18 @@ import ro.msg.learning.entity.OrderDetail;
 import ro.msg.learning.repository.OrderDetailRepository;
 
 public abstract class OrderDetailService {
+	public abstract String getName();
+	protected abstract List<OrderDetail> generateOrderDetails(OrderDto orderDto);
 	protected OrderDetailRepository orderDetailRepository;
 	protected LocationService locationService;
 	protected ProductService productService;
 	protected StockService stockService;
 
-	public abstract String getName();
-	protected abstract List<OrderDetail> generateOrderDetails(OrderDto orderDto);
-
 	public void addOrderToOrderDetails(final Order order, final List<OrderDetail> orderDetails) {
-		for (final OrderDetail orderDetail : orderDetails) {
+		orderDetails.forEach(orderDetail -> {
 			orderDetail.setOrder(order);
 			orderDetailRepository.save(orderDetail);
-		}
+		});
 	}
 
 	@Transactional
@@ -40,17 +39,15 @@ public abstract class OrderDetailService {
 	private List<OrderDetail> persistOrderDetails(final List<OrderDetail> orderDetails) {
 		final List<OrderDetail> orderDetailsCreated = new ArrayList<>();
 
-		for (final OrderDetail orderDetail : orderDetails) {
+		orderDetails.forEach(orderDetail -> {
 			final OrderDetail orderDetailCreated = orderDetailRepository.save(orderDetail);
 			orderDetailsCreated.add(orderDetailCreated);
-		}
+		});
 
 		return orderDetailsCreated;
 	}
 
 	private void updateStocks(final List<OrderDetail> orderDetails) {
-		for (final OrderDetail orderDetail : orderDetails) {
-			stockService.updateStock(orderDetail.getLocation().getId(), orderDetail.getProduct().getId(), orderDetail.getQuantity());
-		}
+		orderDetails.forEach(orderDetail -> stockService.updateStock(orderDetail.getLocation().getId(), orderDetail.getProduct().getId(), orderDetail.getQuantity()));
 	}
 }

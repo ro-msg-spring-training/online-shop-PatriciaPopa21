@@ -19,7 +19,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 @EnableJpaRepositories(basePackages = "ro.msg.learning.repository") // scan JPA DAO's
 public class ShopApplication {
 
-	private static final Logger log = LoggerFactory.getLogger(ShopApplication.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ShopApplication.class);
 
 	public static void main(final String[] args) throws FileNotFoundException {
 		SpringApplication.run(ShopApplication.class, args);
@@ -30,28 +30,8 @@ public class ShopApplication {
 		return new ModelMapper();
 	}
 
-	@Bean
+	@Bean("csvMapper")
 	public CsvMapper csvMapper() {
 		return new CsvMapper();
 	}
-
-	//	@Bean
-	//	public CommandLineRunner addSomeData(final SupplierRepository supplierRepository,
-	//			final ProductCategoryRepository productCategoryRepository, final ProductRepository productRepository) {
-	//		return (args) -> {
-	//			final Supplier s1 = new Supplier("Emag");
-	//			final Supplier s2 = new Supplier("Elefant.ro");
-	//			supplierRepository.save(s1);
-	//			supplierRepository.save(s2);
-	//
-	//			final ProductCategory pc1 = new ProductCategory("Books", "Classical literature");
-	//			final ProductCategory pc2 = new ProductCategory("Watches", "Hand watch");
-	//			productCategoryRepository.save(pc1);
-	//			productCategoryRepository.save(pc2);
-	//
-	//			productRepository.save(new Product("Jane Eyre", "A nice book", new BigDecimal(10), 10.5, pc1, s2, "/janeEyre"));
-	//			productRepository.save(new Product("Quo Vadis", "Another nice book", new BigDecimal(15), 13.2, pc1, s1, "/quoVadis"));
-	//			productRepository.save(new Product("GShock X33", "A nice watch", new BigDecimal(200), 120.9, pc2, s1, "/gShockX33"));
-	//		};
-	//	}
 }

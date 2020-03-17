@@ -18,21 +18,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ "name", "address"})
+@JsonPropertyOrder({ "locationName", "address"})
 public class Location extends Identifiable {
 	@Column(name = "name", nullable = false, unique = true)
-	private String name;
+	private String locationName;
 
 	@Embedded
 	@JsonUnwrapped
 	private Address address;
-
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<Stock> stocks;
-	//
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<Order> orders;
-	//
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<Revenue> revenues;
 }

@@ -17,8 +17,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Supplier extends Identifiable{
 	@Column(name = "name", nullable = false, unique = true)
-	private String name;
-
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<Product> products;
+	private String supplierName;
 }

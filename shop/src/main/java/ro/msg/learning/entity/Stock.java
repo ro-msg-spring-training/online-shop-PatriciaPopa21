@@ -1,5 +1,6 @@
 package ro.msg.learning.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -19,11 +20,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonPropertyOrder({ "location", "product", "quantity"})
 public class Stock extends Identifiable{
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JsonUnwrapped
 	private Location location;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JsonUnwrapped
 	private Product product;
 	

@@ -15,14 +15,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ "name", "description"})
+@JsonPropertyOrder({ "categoryName", "categoryDescription"})
 public class ProductCategory extends Identifiable{
 	@Column(name = "name", nullable = false)
-	private String name;
+	private String categoryName;
 
 	@Column(name = "description")
-	private String description;
-
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<Product> products;
+	private String categoryDescription;
 }

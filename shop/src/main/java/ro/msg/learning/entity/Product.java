@@ -2,6 +2,7 @@ package ro.msg.learning.entity;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -19,14 +20,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ "name", "description", "price", "weight", "category", "supplier", "imageUrl"})
+@JsonPropertyOrder({ "productName", "productDescription", "price", "weight", "category", "supplier", "imageUrl"})
 
 public class Product extends Identifiable{
 	@Column(name = "name", nullable = false)
-	private String name;
+	private String productName;
 
 	@Column(name = "description")
-	private String description;
+	private String productDescription;
 
 	@Column(name = "price", nullable = false)
 	private BigDecimal price;
@@ -34,20 +35,14 @@ public class Product extends Identifiable{
 	@Column(name = "weight")
 	private Double weight;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JsonUnwrapped
 	private ProductCategory category;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JsonUnwrapped
 	private Supplier supplier;
 
 	@Column(name = "image_url")
 	private String imageUrl;
-
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<Stock> stocks;
-	//
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<OrderDetail> orderDetail;
 }

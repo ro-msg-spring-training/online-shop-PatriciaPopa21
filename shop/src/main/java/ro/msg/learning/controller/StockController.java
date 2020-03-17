@@ -31,7 +31,7 @@ public class StockController {
 	}
 
 	@PostMapping(path = "/stocks")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public void importStock(final HttpServletResponse response) throws IOException{
 	}
 }
