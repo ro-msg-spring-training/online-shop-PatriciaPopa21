@@ -35,11 +35,11 @@ public class Product extends Identifiable{
 	@Column(name = "weight")
 	private Double weight;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
 	@JsonUnwrapped
 	private ProductCategory category;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
 	@JsonUnwrapped
 	private Supplier supplier;
 

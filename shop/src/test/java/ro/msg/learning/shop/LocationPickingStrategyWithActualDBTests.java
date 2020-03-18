@@ -8,16 +8,11 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import ro.msg.learning.entity.Address;
@@ -28,7 +23,7 @@ import ro.msg.learning.entity.Stock;
 import ro.msg.learning.entity.Supplier;
 import ro.msg.learning.exception.InexistentIdException;
 import ro.msg.learning.exception.SuitableShippingLocationNotFoundException;
-import ro.msg.learning.service.LocationServiceImpl;
+import ro.msg.learning.service.impl.LocationServiceImpl;
 
 @DataJpaTest
 @Import(LocationServiceImpl.class)
@@ -59,17 +54,31 @@ public class LocationPickingStrategyWithActualDBTests {
 	@BeforeEach
 	@Transactional
 	void init() {
+		/* refresh() is needed for each entity in order to avoid TransientPropertyValueException */
+
 		entityManager.persist(location1);
 		entityManager.persist(location2);
 
+		entityManager.refresh(location1);
+		entityManager.refresh(location2);
+
 		entityManager.persist(productCategory1);
 		entityManager.persist(productCategory1);
+
+		entityManager.refresh(productCategory1);
+		entityManager.refresh(productCategory1);
 
 		entityManager.persist(supplier1);
 		entityManager.persist(supplier2);
 
+		entityManager.refresh(supplier1);
+		entityManager.refresh(supplier2);
+
 		entityManager.persist(product1);
 		entityManager.persist(product2);
+
+		entityManager.refresh(product1);
+		entityManager.refresh(product2);
 	}
 
 	@Test

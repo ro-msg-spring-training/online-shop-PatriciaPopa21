@@ -1,4 +1,4 @@
-package ro.msg.learning.service;
+package ro.msg.learning.service.impl;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ro.msg.learning.entity.Stock;
 import ro.msg.learning.repository.StockRepository;
+import ro.msg.learning.service.StockService;
 
 @Service
 public class StockServiceImpl implements StockService {

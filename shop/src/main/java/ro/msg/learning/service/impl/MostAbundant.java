@@ -1,4 +1,4 @@
-package ro.msg.learning.service;
+package ro.msg.learning.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,10 @@ import ro.msg.learning.entity.Location;
 import ro.msg.learning.entity.OrderDetail;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.repository.OrderDetailRepository;
+import ro.msg.learning.service.LocationService;
+import ro.msg.learning.service.OrderDetailService;
+import ro.msg.learning.service.ProductService;
+import ro.msg.learning.service.StockService;
 
 @Service
 public class MostAbundant extends OrderDetailService{

@@ -14,7 +14,7 @@ import ro.msg.learning.entity.Customer;
 @AllArgsConstructor
 public class OrderDto {
 	private LocalDateTime createdAt;
-	private Customer customer;
+	private Integer customerId;
 	private Address address;
 	// since JSON only allows String keys for maps, I have passed the product Id as String
 	private Map<String, Integer> productsAndCorrespondingQuantities;

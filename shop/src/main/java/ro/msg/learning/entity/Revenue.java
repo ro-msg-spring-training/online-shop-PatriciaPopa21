@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Revenue extends Identifiable{
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
 	private Location location;
 
 	@Column(name = "date", nullable = false)

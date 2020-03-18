@@ -20,11 +20,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonPropertyOrder({ "location", "product", "quantity"})
 public class Stock extends Identifiable{
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
 	@JsonUnwrapped
 	private Location location;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
 	@JsonUnwrapped
 	private Product product;
 	

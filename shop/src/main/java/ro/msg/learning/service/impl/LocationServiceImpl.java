@@ -1,4 +1,4 @@
-package ro.msg.learning.service;
+package ro.msg.learning.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import ro.msg.learning.exception.InexistentIdException;
 import ro.msg.learning.exception.SuitableShippingLocationNotFoundException;
 import ro.msg.learning.repository.LocationRepository;
 import ro.msg.learning.repository.ProductRepository;
+import ro.msg.learning.service.LocationService;
 
 @Service
 @RequiredArgsConstructor

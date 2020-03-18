@@ -28,7 +28,4 @@ public class Customer extends Identifiable {
 
 	@Column(name = "email_address", nullable = false, unique = true)
 	private String emailAddress;
-
-	//	@OneToMany(fetch = FetchType.LAZY)
-	//	private List<Order> orders;
 }

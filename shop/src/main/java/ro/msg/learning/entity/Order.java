@@ -32,7 +32,4 @@ public class Order extends Identifiable {
 
 	@Embedded
 	private Address address;
-
-//	@OneToMany(fetch = FetchType.LAZY)
-//	private List<OrderDetail> orderDetails;
 }

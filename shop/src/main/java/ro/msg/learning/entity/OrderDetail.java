@@ -24,6 +24,6 @@ public class OrderDetail extends Identifiable{
 	@ManyToOne
 	private Location location;
 
-	@Column(name = "quantity_id", nullable = false)
+	@Column(name = "quantity", nullable = false)
 	private Integer quantity;
 }

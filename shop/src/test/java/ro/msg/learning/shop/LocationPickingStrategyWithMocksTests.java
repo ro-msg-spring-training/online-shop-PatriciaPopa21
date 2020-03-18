@@ -1,19 +1,19 @@
 package ro.msg.learning.shop;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -23,16 +23,12 @@ import ro.msg.learning.entity.Address;
 import ro.msg.learning.entity.Location;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.entity.ProductCategory;
-import ro.msg.learning.entity.Stock;
 import ro.msg.learning.entity.Supplier;
 import ro.msg.learning.exception.InexistentIdException;
 import ro.msg.learning.exception.SuitableShippingLocationNotFoundException;
 import ro.msg.learning.repository.LocationRepository;
 import ro.msg.learning.repository.ProductRepository;
-import ro.msg.learning.service.LocationServiceImpl;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import ro.msg.learning.service.impl.LocationServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class LocationPickingStrategyWithMocksTests {

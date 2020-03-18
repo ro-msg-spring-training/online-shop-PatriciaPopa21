@@ -15,19 +15,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import ro.msg.learning.dto.ProductDto;
 import ro.msg.learning.entity.Product;
+import ro.msg.learning.entity.ProductCategory;
+import ro.msg.learning.entity.Supplier;
+import ro.msg.learning.service.ProductCategoryService;
 import ro.msg.learning.service.ProductService;
+import ro.msg.learning.service.SupplierService;
 
 @RestController
+@RequiredArgsConstructor
 public class ProductController {
 	private final ProductService productService;
 	private final ModelMapper modelMapper;
-
-	public ProductController(final ProductService productService, final ModelMapper modelMapper) {
-		this.productService = productService;
-		this.modelMapper = modelMapper;
-	}
+	private final ProductCategoryService productCategoryService;
+	private final SupplierService supplierService;
 
 	@GetMapping(path = "/products")
 	public List<ProductDto> getAllProducts(){
@@ -66,6 +69,13 @@ public class ProductController {
 	}
 
 	private Product convertToEntity(final ProductDto productDto) {
-		return modelMapper.map(productDto, Product.class);
+		final ProductCategory productCategory = productCategoryService.getProductCategory(productDto.getCategoryId()).get();
+		final Supplier supplier = supplierService.getSupplier(productDto.getSupplierId()).get();
+		
+		final Product entity = modelMapper.map(productDto, Product.class);
+		entity.setCategory(productCategory);
+		entity.setSupplier(supplier);
+		
+		return entity;
 	}
 }
