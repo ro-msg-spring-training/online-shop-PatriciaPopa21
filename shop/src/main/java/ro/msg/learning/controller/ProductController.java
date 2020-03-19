@@ -20,9 +20,9 @@ import ro.msg.learning.dto.ProductDto;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.entity.ProductCategory;
 import ro.msg.learning.entity.Supplier;
-import ro.msg.learning.service.ProductCategoryService;
-import ro.msg.learning.service.ProductService;
-import ro.msg.learning.service.SupplierService;
+import ro.msg.learning.service.interfaces.ProductCategoryService;
+import ro.msg.learning.service.interfaces.ProductService;
+import ro.msg.learning.service.interfaces.SupplierService;
 
 @RestController
 @RequiredArgsConstructor

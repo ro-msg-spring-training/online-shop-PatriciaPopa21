@@ -11,15 +11,16 @@ import ro.msg.learning.entity.Location;
 import ro.msg.learning.entity.OrderDetail;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.repository.OrderDetailRepository;
-import ro.msg.learning.service.LocationService;
-import ro.msg.learning.service.OrderDetailService;
-import ro.msg.learning.service.ProductService;
-import ro.msg.learning.service.StockService;
+import ro.msg.learning.service.interfaces.LocationService;
+import ro.msg.learning.service.interfaces.OrderDetailService;
+import ro.msg.learning.service.interfaces.ProductService;
+import ro.msg.learning.service.interfaces.StockService;
 
 @Service
-public class SingleLocation extends OrderDetailService{
+public class SingleLocationStrategy extends OrderDetailService {
 
-	public SingleLocation(final LocationService locationService, final ProductService productService, final OrderDetailRepository orderDetailRepository, final StockService stockService) {
+	public SingleLocationStrategy(final LocationService locationService, final ProductService productService,
+			final OrderDetailRepository orderDetailRepository, final StockService stockService) {
 		this.locationService = locationService;
 		this.productService = productService;
 		this.orderDetailRepository = orderDetailRepository;
@@ -35,11 +36,13 @@ public class SingleLocation extends OrderDetailService{
 	protected List<OrderDetail> generateOrderDetails(final OrderDto orderDto) {
 		final List<OrderDetail> orderDetails = new ArrayList<>();
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = orderDto.getProductsAndCorrespondingQuantities();
+		final Map<String, Integer> productsAndCorrespondingQuantities = orderDto
+				.getProductsAndCorrespondingQuantities();
 
-		final Location shippingLocation = locationService.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+		final Location shippingLocation = locationService
+				.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
 
-		for(final String productIdAsString : productsAndCorrespondingQuantities.keySet() ) {
+		for (final String productIdAsString : productsAndCorrespondingQuantities.keySet()) {
 			final Integer productId = Integer.parseInt(productIdAsString);
 			final Integer quantity = productsAndCorrespondingQuantities.get(productIdAsString);
 			final Product product = productService.getProduct(productId).get();

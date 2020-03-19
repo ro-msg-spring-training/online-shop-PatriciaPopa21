@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import ro.msg.learning.service.OrderDetailService;
+import ro.msg.learning.service.interfaces.OrderDetailService;
 
 @Configuration
 public class OrderControllerConfiguration {

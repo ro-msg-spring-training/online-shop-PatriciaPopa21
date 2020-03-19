@@ -11,15 +11,16 @@ import ro.msg.learning.entity.Location;
 import ro.msg.learning.entity.OrderDetail;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.repository.OrderDetailRepository;
-import ro.msg.learning.service.LocationService;
-import ro.msg.learning.service.OrderDetailService;
-import ro.msg.learning.service.ProductService;
-import ro.msg.learning.service.StockService;
+import ro.msg.learning.service.interfaces.LocationService;
+import ro.msg.learning.service.interfaces.OrderDetailService;
+import ro.msg.learning.service.interfaces.ProductService;
+import ro.msg.learning.service.interfaces.StockService;
 
 @Service
-public class MostAbundant extends OrderDetailService{
+public class MostAbundantStrategy extends OrderDetailService {
 
-	public MostAbundant(final LocationService locationService, final ProductService productService, final OrderDetailRepository orderDetailRepository, final StockService stockService) {
+	public MostAbundantStrategy(final LocationService locationService, final ProductService productService,
+			final OrderDetailRepository orderDetailRepository, final StockService stockService) {
 		this.locationService = locationService;
 		this.productService = productService;
 		this.orderDetailRepository = orderDetailRepository;
@@ -35,12 +36,14 @@ public class MostAbundant extends OrderDetailService{
 	protected List<OrderDetail> generateOrderDetails(final OrderDto orderDto) {
 		final List<OrderDetail> orderDetails = new ArrayList<>();
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = orderDto.getProductsAndCorrespondingQuantities();
+		final Map<String, Integer> productsAndCorrespondingQuantities = orderDto
+				.getProductsAndCorrespondingQuantities();
 
-		for(final String productIdAsString : productsAndCorrespondingQuantities.keySet() ) {
+		for (final String productIdAsString : productsAndCorrespondingQuantities.keySet()) {
 			final Integer productId = Integer.parseInt(productIdAsString);
 			final Integer quantity = productsAndCorrespondingQuantities.get(productIdAsString);
-			final Location shippingLocation = locationService.getProductMostAbundantShippingLocation(productId, quantity);
+			final Location shippingLocation = locationService.getProductMostAbundantShippingLocation(productId,
+					quantity);
 			final Product product = productService.getProduct(productId).get();
 			orderDetails.add(new OrderDetail(null, product, shippingLocation, quantity));
 		}

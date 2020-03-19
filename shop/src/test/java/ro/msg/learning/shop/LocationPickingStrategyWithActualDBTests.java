@@ -24,12 +24,14 @@ import ro.msg.learning.entity.Supplier;
 import ro.msg.learning.exception.InexistentIdException;
 import ro.msg.learning.exception.SuitableShippingLocationNotFoundException;
 import ro.msg.learning.service.impl.LocationServiceImpl;
+import ro.msg.learning.service.impl.ProductServiceImpl;
+import ro.msg.learning.service.impl.StockServiceImpl;
 
 @DataJpaTest
-@Import(LocationServiceImpl.class)
+@Import({ LocationServiceImpl.class, ProductServiceImpl.class, StockServiceImpl.class })
 public class LocationPickingStrategyWithActualDBTests {
-	private final Address address1 = new Address("Romania","Timisoara","Timis","Str. Gh. Lazar nr. 2");
-	private final Address address2 = new Address("Romania","Bucuresti","Ilfov","Splaiul Nicolae Titulescu nr. 4");
+	private final Address address1 = new Address("Romania", "Timisoara", "Timis", "Str. Gh. Lazar nr. 2");
+	private final Address address2 = new Address("Romania", "Bucuresti", "Ilfov", "Splaiul Nicolae Titulescu nr. 4");
 
 	private final Location location1 = new Location("Cladirea A", address1);
 	private final Location location2 = new Location("Cladirea B", address2);
@@ -40,8 +42,10 @@ public class LocationPickingStrategyWithActualDBTests {
 	private final Supplier supplier1 = new Supplier("Elefant.ro");
 	private final Supplier supplier2 = new Supplier("Emag");
 
-	private final Product product1 = new Product("Jane Eyre", "A nice book", new BigDecimal(25), 40.0, productCategory1, supplier1, "/janeEyre");
-	private final Product product2 = new Product("GShock X33", "A nice watch", new BigDecimal(200), 120.9, productCategory2, supplier2, "/gShockX33");
+	private final Product product1 = new Product("Jane Eyre", "A nice book", new BigDecimal(25), 40.0, productCategory1,
+			supplier1, "/janeEyre");
+	private final Product product2 = new Product("GShock X33", "A nice watch", new BigDecimal(200), 120.9,
+			productCategory2, supplier2, "/gShockX33");
 
 	private static final Integer INEXISTENT_ID = 9999;
 
@@ -54,7 +58,10 @@ public class LocationPickingStrategyWithActualDBTests {
 	@BeforeEach
 	@Transactional
 	void init() {
-		/* refresh() is needed for each entity in order to avoid TransientPropertyValueException */
+		/*
+		 * refresh() is needed for each entity in order to avoid
+		 * TransientPropertyValueException
+		 */
 
 		entityManager.persist(location1);
 		entityManager.persist(location2);
@@ -82,7 +89,7 @@ public class LocationPickingStrategyWithActualDBTests {
 	}
 
 	@Test
-	void When_OneCommonShippingLocationExists_Expect_ReturnLocation(){
+	void When_OneCommonShippingLocationExists_Expect_ReturnLocation() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 10);
 		final Stock stock3 = new Stock(location1, product2, 0);
@@ -92,7 +99,8 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		final Map<String, Integer> productsAndCorrespondingQuantities = getInputData(1, 1);
 
-		final Location location = locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+		final Location location = locationServiceImpl
+				.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
 
 		assertEquals("Cladirea B", location.getLocationName());
 		assertEquals("Bucuresti", location.getAddress().getCity());
@@ -104,7 +112,7 @@ public class LocationPickingStrategyWithActualDBTests {
 	}
 
 	@Test
-	void When_MoreCommonShippingLocationsExist_Expect_ReturnLocationWithSmallestId(){
+	void When_MoreCommonShippingLocationsExist_Expect_ReturnLocationWithSmallestId() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 5);
 		final Stock stock3 = new Stock(location1, product2, 5);
@@ -114,7 +122,8 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		final Map<String, Integer> productsAndCorrespondingQuantities = getInputData(1, 1);
 
-		final Location location = locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+		final Location location = locationServiceImpl
+				.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
 
 		assertEquals("Cladirea A", location.getLocationName());
 		assertEquals("Timisoara", location.getAddress().getCity());
@@ -126,7 +135,7 @@ public class LocationPickingStrategyWithActualDBTests {
 	}
 
 	@Test
-	void When_NoShippingLocationExistsForOneProduct_Expect_RetrieveSingleShippingLocationToFail(){
+	void When_NoShippingLocationExistsForOneProduct_Expect_RetrieveSingleShippingLocationToFail() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 10);
 		final Stock stock3 = new Stock(location1, product2, 5);
@@ -136,17 +145,19 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		final Map<String, Integer> productsAndCorrespondingQuantities = getInputData(1, 6);
 
-		final SuitableShippingLocationNotFoundException exception = Assertions.assertThrows(SuitableShippingLocationNotFoundException.class, () -> {
-			locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
-		});
+		final SuitableShippingLocationNotFoundException exception = Assertions
+				.assertThrows(SuitableShippingLocationNotFoundException.class, () -> {
+					locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+				});
 
-		assertEquals("Your order couldn't be processed. Not enough products on stock for product: " + product2, exception.getMessage());
+		assertEquals("Your order couldn't be processed. Not enough products on stock for product: " + product2,
+				exception.getMessage());
 
 		tearDownStockData(stock1, stock2, stock3, stock4);
 	}
 
 	@Test
-	void When_NoCommonShippingLocationFound_Expect_RetrieveSingleShippingLocationToFail(){
+	void When_NoCommonShippingLocationFound_Expect_RetrieveSingleShippingLocationToFail() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 0);
 		final Stock stock3 = new Stock(location1, product2, 0);
@@ -156,17 +167,20 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		final Map<String, Integer> productsAndCorrespondingQuantities = getInputData(2, 1);
 
-		final SuitableShippingLocationNotFoundException exception = Assertions.assertThrows(SuitableShippingLocationNotFoundException.class, () -> {
-			locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
-		});
+		final SuitableShippingLocationNotFoundException exception = Assertions
+				.assertThrows(SuitableShippingLocationNotFoundException.class, () -> {
+					locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+				});
 
-		assertEquals("Your order couldn't be processed. No common shipping location was found for the products you have requested", exception.getMessage());
+		assertEquals(
+				"Your order couldn't be processed. No common shipping location was found for the products you have requested",
+				exception.getMessage());
 
 		tearDownStockData(stock1, stock2, stock3, stock4);
 	}
 
 	@Test
-	void When_WrongProductIdGiven_Expect_RetrieveSingleShippingLocationToFail(){
+	void When_WrongProductIdGiven_Expect_RetrieveSingleShippingLocationToFail() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 5);
 		final Stock stock3 = new Stock(location1, product2, 5);
@@ -187,7 +201,7 @@ public class LocationPickingStrategyWithActualDBTests {
 	}
 
 	@Test
-	void When_OneMostAbundantLocationExists_Expect_ReturnLocation(){
+	void When_OneMostAbundantLocationExists_Expect_ReturnLocation() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 10);
 		final Stock stock3 = new Stock(location1, product2, 5);
@@ -209,7 +223,7 @@ public class LocationPickingStrategyWithActualDBTests {
 	}
 
 	@Test
-	void When_MoreMostAbundantLocationsExists_Expect_ReturnLocationWithSmallestId(){
+	void When_MoreMostAbundantLocationsExists_Expect_ReturnLocationWithSmallestId() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 5);
 		final Stock stock3 = new Stock(location1, product2, 5);
@@ -231,7 +245,7 @@ public class LocationPickingStrategyWithActualDBTests {
 	}
 
 	@Test
-	void When_NoLocationWithEnoughStockFound_Expect_RetrieveMostAbundantShippingLocationToFail(){
+	void When_NoLocationWithEnoughStockFound_Expect_RetrieveMostAbundantShippingLocationToFail() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 5);
 		final Stock stock3 = new Stock(location1, product2, 5);
@@ -241,17 +255,19 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		final Integer id1 = (Integer) entityManager.getId(product1);
 
-		final SuitableShippingLocationNotFoundException exception = Assertions.assertThrows(SuitableShippingLocationNotFoundException.class, () -> {
-			locationServiceImpl.getProductMostAbundantShippingLocation(id1, 10);
-		});
+		final SuitableShippingLocationNotFoundException exception = Assertions
+				.assertThrows(SuitableShippingLocationNotFoundException.class, () -> {
+					locationServiceImpl.getProductMostAbundantShippingLocation(id1, 10);
+				});
 
-		assertEquals("Your order couldn't be processed. Not enough products on stock for product: " + product1, exception.getMessage());
+		assertEquals("Your order couldn't be processed. Not enough products on stock for product: " + product1,
+				exception.getMessage());
 
 		tearDownStockData(stock1, stock2, stock3, stock4);
 	}
 
 	@Test
-	void When_WrongProductIdGiven_Expect_RetrieveMostAbundantShippingLocationToFail(){
+	void When_WrongProductIdGiven_Expect_RetrieveMostAbundantShippingLocationToFail() {
 		final Stock stock1 = new Stock(location1, product1, 5);
 		final Stock stock2 = new Stock(location2, product1, 5);
 		final Stock stock3 = new Stock(location1, product2, 5);
@@ -283,12 +299,16 @@ public class LocationPickingStrategyWithActualDBTests {
 	}
 
 	private Map<String, Integer> getInputData(final Integer quantity1, final Integer quantity2) {
-		/* We need to find the new id for the products with each new test that uses them, because they get incremented
-		 * all the time, as a result of using a single DB instance for performing all the tests and running init() before
-		 * each test. This could obviously be fixed avoided by running init() only once, before all the tests. This
-		 * would mean making it static, which implies our EntityManager instance needs to be static as well, but this will
-		 * cause it to be initialized with null, and consequently break the tests.
-		 * This step is not actually necessary on the first test */
+		/*
+		 * We need to find the new id for the products with each new test that uses
+		 * them, because they get incremented all the time, as a result of using a
+		 * single DB instance for performing all the tests and running init() before
+		 * each test. This could obviously be fixed avoided by running init() only once,
+		 * before all the tests. This would mean making it static, which implies our
+		 * EntityManager instance needs to be static as well, but this will cause it to
+		 * be initialized with null, and consequently break the tests. This step is not
+		 * actually necessary on the first test
+		 */
 
 		final Integer id1 = (Integer) entityManager.getId(product1);
 		final Integer id2 = (Integer) entityManager.getId(product2);

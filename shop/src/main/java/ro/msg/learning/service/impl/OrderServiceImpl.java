@@ -12,9 +12,9 @@ import ro.msg.learning.entity.Order;
 import ro.msg.learning.entity.OrderDetail;
 import ro.msg.learning.repository.CustomerRepository;
 import ro.msg.learning.repository.OrderRepository;
-import ro.msg.learning.service.CustomerService;
-import ro.msg.learning.service.OrderDetailService;
-import ro.msg.learning.service.OrderService;
+import ro.msg.learning.service.interfaces.CustomerService;
+import ro.msg.learning.service.interfaces.OrderDetailService;
+import ro.msg.learning.service.interfaces.OrderService;
 
 @Service
 @RequiredArgsConstructor

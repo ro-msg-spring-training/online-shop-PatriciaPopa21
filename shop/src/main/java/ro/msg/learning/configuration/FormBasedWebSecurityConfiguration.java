@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lombok.RequiredArgsConstructor;
 import ro.msg.learning.entity.CustomerCredentials;
-import ro.msg.learning.service.CustomerCredentialsService;
+import ro.msg.learning.service.interfaces.CustomerCredentialsService;
 
 @Configuration
 @EnableWebSecurity

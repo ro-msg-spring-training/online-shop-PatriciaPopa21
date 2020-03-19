@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ro.msg.learning.entity.Supplier;
 import ro.msg.learning.repository.SupplierRepository;
-import ro.msg.learning.service.SupplierService;
+import ro.msg.learning.service.interfaces.SupplierService;
 
 @Service
 @RequiredArgsConstructor

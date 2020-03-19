@@ -1,4 +1,4 @@
-package ro.msg.learning.service;
+package ro.msg.learning.service.interfaces;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ro.msg.learning.dto.OrderDto;
 import ro.msg.learning.entity.Order;
-import ro.msg.learning.service.OrderService;
+import ro.msg.learning.service.interfaces.OrderService;
 
 @RestController
 public class OrderController {

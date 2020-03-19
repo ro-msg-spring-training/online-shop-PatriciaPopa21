@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import ro.msg.learning.entity.Customer;
 import ro.msg.learning.entity.CustomerCredentials;
 import ro.msg.learning.repository.CustomerRepository;
-import ro.msg.learning.service.CustomerCredentialsService;
+import ro.msg.learning.service.interfaces.CustomerCredentialsService;
 
 @Service
 @RequiredArgsConstructor

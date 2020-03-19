@@ -27,8 +27,8 @@ import ro.msg.learning.entity.Supplier;
 import ro.msg.learning.exception.InexistentIdException;
 import ro.msg.learning.exception.SuitableShippingLocationNotFoundException;
 import ro.msg.learning.repository.LocationRepository;
-import ro.msg.learning.repository.ProductRepository;
 import ro.msg.learning.service.impl.LocationServiceImpl;
+import ro.msg.learning.service.interfaces.ProductService;
 
 @ExtendWith(MockitoExtension.class)
 public class LocationPickingStrategyWithMocksTests {
@@ -53,16 +53,19 @@ public class LocationPickingStrategyWithMocksTests {
 	private LocationRepository locationRepository;
 
 	@Mock
-	private ProductRepository productRepository;
+	private ProductService productService;
+
+	//	@Mock
+	//	private StockService stockService;
 
 	@InjectMocks
 	private LocationServiceImpl locationServiceImpl;
 
 	@BeforeEach
 	void init() {
-		lenient().when(productRepository.findById(1)).thenReturn(Optional.of(product1));
-		lenient().when(productRepository.findById(2)).thenReturn(Optional.of(product2));
-		lenient().when(productRepository.findById(INEXISTENT_ID)).thenReturn(Optional.empty());
+		lenient().when(productService.getProduct(1)).thenReturn(Optional.of(product1));
+		lenient().when(productService.getProduct(2)).thenReturn(Optional.of(product2));
+		lenient().when(productService.getProduct(INEXISTENT_ID)).thenReturn(Optional.empty());
 	}
 
 	@Test

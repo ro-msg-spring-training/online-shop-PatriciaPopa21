@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ro.msg.learning.entity.Stock;
 import ro.msg.learning.repository.StockRepository;
-import ro.msg.learning.service.StockService;
+import ro.msg.learning.service.interfaces.StockService;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -26,5 +26,10 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public List<Stock> getAllStocksForLocation(final Integer location_id) {
 		return stockRepository.getAllStocksForLocation(location_id);
+	}
+
+	@Override
+	public Stock getStockByLocationAndProduct(final Integer productId, final Integer location_id){
+		return stockRepository.getStockByLocationAndProduct(location_id, productId);
 	}
 }

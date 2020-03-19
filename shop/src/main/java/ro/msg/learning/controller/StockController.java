@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ro.msg.learning.entity.Stock;
-import ro.msg.learning.service.StockService;
+import ro.msg.learning.service.interfaces.StockService;
 
 @RestController
 public class StockController {

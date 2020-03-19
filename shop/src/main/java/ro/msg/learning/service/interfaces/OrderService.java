@@ -1,4 +1,4 @@
-package ro.msg.learning.service;
+package ro.msg.learning.service.interfaces;
 
 import ro.msg.learning.dto.OrderDto;
 import ro.msg.learning.entity.Order;
