@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
 import ro.msg.learning.dto.ProductDto;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.entity.ProductCategory;
@@ -25,21 +25,29 @@ import ro.msg.learning.service.interfaces.ProductService;
 import ro.msg.learning.service.interfaces.SupplierService;
 
 @RestController
-@RequiredArgsConstructor
 public class ProductController {
 	private final ProductService productService;
 	private final ModelMapper modelMapper;
 	private final ProductCategoryService productCategoryService;
 	private final SupplierService supplierService;
 
-	@GetMapping(path = "/products")
-	public List<ProductDto> getAllProducts(){
+	public ProductController(final ProductService productService,
+			@Qualifier("modelMapper") final ModelMapper modelMapper,
+			final ProductCategoryService productCategoryService, final SupplierService supplierService) {
+		this.productService = productService;
+		this.modelMapper = modelMapper;
+		this.productCategoryService = productCategoryService;
+		this.supplierService = supplierService;
+	}
+
+	@GetMapping(path = "/products", produces = "application/json")
+	public List<ProductDto> getAllProducts() {
 		final List<Product> products = (List<Product>) productService.getAllProducts();
 		return products.stream().map(product -> convertToDto(product)).collect(Collectors.toList());
 	}
 
 	@GetMapping(value = "/products/{id}")
-	public ProductDto getProduct(@PathVariable("id") final Integer id){
+	public ProductDto getProduct(@PathVariable("id") final Integer id) {
 		final Optional<Product> product = productService.getProduct(id);
 		return convertToDto(product.get());
 	}
@@ -69,13 +77,14 @@ public class ProductController {
 	}
 
 	private Product convertToEntity(final ProductDto productDto) {
-		final ProductCategory productCategory = productCategoryService.getProductCategory(productDto.getCategoryId()).get();
+		final ProductCategory productCategory = productCategoryService.getProductCategory(productDto.getCategoryId())
+				.get();
 		final Supplier supplier = supplierService.getSupplier(productDto.getSupplierId()).get();
-		
+
 		final Product entity = modelMapper.map(productDto, Product.class);
 		entity.setCategory(productCategory);
 		entity.setSupplier(supplier);
-		
+
 		return entity;
 	}
 }

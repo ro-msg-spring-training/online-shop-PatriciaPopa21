@@ -10,11 +10,9 @@ import ro.msg.learning.entity.Stock;
 
 @Repository
 public interface StockRepository extends CrudRepository<Stock, Integer> {
-	@Query(value = "select * from stock where location_id = ?1 and product_id = ?2",
-			nativeQuery = true)
+	@Query(value = "select * from stock where location_id = ?1 and product_id = ?2", nativeQuery = true)
 	Stock getStockByLocationAndProduct(final Integer location_id, final Integer product_id);
 
-	@Query(value = "select * from stock where location_id = ?1 order by id",
-			nativeQuery = true)
+	@Query(value = "select * from stock where location_id = ?1 order by id", nativeQuery = true)
 	List<Stock> getAllStocksForLocation(Integer location_id);
 }
