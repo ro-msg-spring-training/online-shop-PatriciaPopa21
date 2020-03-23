@@ -13,7 +13,7 @@ import ro.msg.learning.service.interfaces.OrderDetailService;
 
 @Configuration
 public class OrderControllerConfiguration {
-	@Value("${strategy}")
+	@Value("${strategy:closest_location}")
 	private String strategyName;
 
 	private Map<String, OrderDetailService> availableStrategies;
@@ -22,7 +22,8 @@ public class OrderControllerConfiguration {
 		availableStrategies = getStrategyImplementationsMap(strategyImplementations);
 	}
 
-	private Map<String, OrderDetailService> getStrategyImplementationsMap(final List<OrderDetailService> strategyImplementations) {
+	private Map<String, OrderDetailService> getStrategyImplementationsMap(
+			final List<OrderDetailService> strategyImplementations) {
 		final Map<String, OrderDetailService> availableStrategies = new HashMap<>();
 
 		for (final OrderDetailService strategy : strategyImplementations) {

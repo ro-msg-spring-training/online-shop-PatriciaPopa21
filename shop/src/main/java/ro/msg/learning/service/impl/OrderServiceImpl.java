@@ -5,12 +5,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
+
 import lombok.RequiredArgsConstructor;
 import ro.msg.learning.dto.OrderDto;
 import ro.msg.learning.entity.Customer;
 import ro.msg.learning.entity.Order;
 import ro.msg.learning.entity.OrderDetail;
-import ro.msg.learning.repository.CustomerRepository;
 import ro.msg.learning.repository.OrderRepository;
 import ro.msg.learning.service.interfaces.CustomerService;
 import ro.msg.learning.service.interfaces.OrderDetailService;
@@ -25,7 +26,7 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	@Transactional
-	public Order createOrder(final OrderDto orderDto) {
+	public OrderDto createOrder(final OrderDto orderDto) {
 		final List<OrderDetail> orderDetails = orderDetailService.obtainOrderDetails(orderDto);
 		
 		Customer customer = customerService.getCustomer(orderDto.getCustomerId()).get();
@@ -33,7 +34,8 @@ public class OrderServiceImpl implements OrderService{
 		orderRepository.save(orderCreated);
 		
 		orderDetailService.addOrderToOrderDetails(orderCreated, orderDetails);
-		return orderCreated;
+		
+		return orderDto;
 	}
 
 }

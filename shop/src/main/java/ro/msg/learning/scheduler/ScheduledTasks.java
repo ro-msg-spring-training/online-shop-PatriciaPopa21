@@ -1,4 +1,4 @@
-package ro.msg.learning.configuration;
+package ro.msg.learning.scheduler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

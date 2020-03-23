@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import ro.msg.learning.entity.Location;
+import ro.msg.learning.entity.OrderDetailDto;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.entity.Stock;
 import ro.msg.learning.exception.InexistentIdException;
@@ -23,6 +24,8 @@ import ro.msg.learning.service.interfaces.StockService;
 @Service
 @AllArgsConstructor
 public class LocationServiceImpl implements LocationService{
+	private static final String INEXISTENT_ID = "No product was found for the given id: ";
+
 	private static final String NOT_ENOUGH_PRODUCTS = "Your order couldn't be processed. Not enough products on stock for product: ";
 
 	private static final String NO_COMMON_SHIPPING_LOCATION_FOUND = "Your order couldn't be processed. No common shipping location was found for the products you have requested";
@@ -56,9 +59,9 @@ public class LocationServiceImpl implements LocationService{
 	}
 
 	@Override
-	public Location getSingleShippingLocationForAllProducts(final Map<String, Integer> productsAndCorrespondingQuantities){
+	public Location getSingleShippingLocationForAllProducts(final List<OrderDetailDto> orderDetailDtos){
 		final List<List<Location>> validShippingLocationsPerProduct = getAllValidLocationsForEachProduct(
-				productsAndCorrespondingQuantities);
+				orderDetailDtos);
 
 		final Location singleShippingLocation = computeSingleShippingLocation(validShippingLocationsPerProduct);
 
@@ -76,13 +79,12 @@ public class LocationServiceImpl implements LocationService{
 		return shippingLocation;
 	}
 
-	private List<List<Location>> getAllValidLocationsForEachProduct(
-			final Map<String, Integer> productsAndCorrespondingQuantities) {
+	private List<List<Location>> getAllValidLocationsForEachProduct(final List<OrderDetailDto> orderDetailDtos) {
 		final List<List<Location>> validShippingLocationsPerProduct = new ArrayList<>();
 
-		for(final String productIdAsString : productsAndCorrespondingQuantities.keySet() ) {
-			final Integer productId = Integer.parseInt(productIdAsString);
-			final Integer quantity = productsAndCorrespondingQuantities.get(productIdAsString);
+		for(final OrderDetailDto orderDetailDto : orderDetailDtos) {
+			final Integer productId = orderDetailDto.getProductId();
+			final Integer quantity = orderDetailDto.getQuantity();
 
 			validateProductIdExistence(productId);
 
@@ -119,7 +121,7 @@ public class LocationServiceImpl implements LocationService{
 		final Optional<Product> product = productService.getProduct(productId);
 
 		if(!product.isPresent()) {
-			throw new InexistentIdException("No product was found for the given id: " + productId);
+			throw new InexistentIdException(INEXISTENT_ID + productId);
 		}
 	}
 

@@ -3,8 +3,8 @@ package ro.msg.learning.shop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ro.msg.learning.entity.Address;
 import ro.msg.learning.entity.Location;
+import ro.msg.learning.entity.OrderDetailDto;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.entity.ProductCategory;
 import ro.msg.learning.entity.Stock;
@@ -97,10 +98,9 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		setupStockData(stock1, stock2, stock3, stock4);
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = getInputData(1, 1);
+		final List<OrderDetailDto> orderDetailDtos = getInputData(1, 1);
 
-		final Location location = locationServiceImpl
-				.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+		final Location location = locationServiceImpl.getSingleShippingLocationForAllProducts(orderDetailDtos);
 
 		assertEquals("Cladirea B", location.getLocationName());
 		assertEquals("Bucuresti", location.getAddress().getCity());
@@ -120,10 +120,9 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		setupStockData(stock1, stock2, stock3, stock4);
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = getInputData(1, 1);
+		final List<OrderDetailDto> orderDetailDtos = getInputData(1, 1);
 
-		final Location location = locationServiceImpl
-				.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+		final Location location = locationServiceImpl.getSingleShippingLocationForAllProducts(orderDetailDtos);
 
 		assertEquals("Cladirea A", location.getLocationName());
 		assertEquals("Timisoara", location.getAddress().getCity());
@@ -143,11 +142,11 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		setupStockData(stock1, stock2, stock3, stock4);
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = getInputData(1, 6);
+		final List<OrderDetailDto> orderDetailDtos = getInputData(1, 6);
 
 		final SuitableShippingLocationNotFoundException exception = Assertions
 				.assertThrows(SuitableShippingLocationNotFoundException.class, () -> {
-					locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+					locationServiceImpl.getSingleShippingLocationForAllProducts(orderDetailDtos);
 				});
 
 		assertEquals("Your order couldn't be processed. Not enough products on stock for product: " + product2,
@@ -165,11 +164,11 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		setupStockData(stock1, stock2, stock3, stock4);
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = getInputData(2, 1);
+		final List<OrderDetailDto> orderDetailDtos = getInputData(2, 1);
 
 		final SuitableShippingLocationNotFoundException exception = Assertions
 				.assertThrows(SuitableShippingLocationNotFoundException.class, () -> {
-					locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+					locationServiceImpl.getSingleShippingLocationForAllProducts(orderDetailDtos);
 				});
 
 		assertEquals(
@@ -188,11 +187,11 @@ public class LocationPickingStrategyWithActualDBTests {
 
 		setupStockData(stock1, stock2, stock3, stock4);
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = new HashMap<>();
-		productsAndCorrespondingQuantities.put(INEXISTENT_ID + "", 1);
+		final List<OrderDetailDto> orderDetailDtos = new ArrayList<>();
+		orderDetailDtos.add(new OrderDetailDto(INEXISTENT_ID, 1));
 
 		final InexistentIdException exception = Assertions.assertThrows(InexistentIdException.class, () -> {
-			locationServiceImpl.getSingleShippingLocationForAllProducts(productsAndCorrespondingQuantities);
+			locationServiceImpl.getSingleShippingLocationForAllProducts(orderDetailDtos);
 		});
 
 		assertEquals("No product was found for the given id: " + INEXISTENT_ID, exception.getMessage());
@@ -298,7 +297,7 @@ public class LocationPickingStrategyWithActualDBTests {
 		}
 	}
 
-	private Map<String, Integer> getInputData(final Integer quantity1, final Integer quantity2) {
+	private List<OrderDetailDto> getInputData(final Integer quantity1, final Integer quantity2) {
 		/*
 		 * We need to find the new id for the products with each new test that uses
 		 * them, because they get incremented all the time, as a result of using a
@@ -313,9 +312,10 @@ public class LocationPickingStrategyWithActualDBTests {
 		final Integer id1 = (Integer) entityManager.getId(product1);
 		final Integer id2 = (Integer) entityManager.getId(product2);
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = new HashMap<>();
-		productsAndCorrespondingQuantities.put(id1 + "", quantity1);
-		productsAndCorrespondingQuantities.put(id2 + "", quantity2);
-		return productsAndCorrespondingQuantities;
+		final List<OrderDetailDto> orderDetailDtos = new ArrayList<>();
+		orderDetailDtos.add(new OrderDetailDto(id1, quantity1));
+		orderDetailDtos.add(new OrderDetailDto(id2, quantity2));
+
+		return orderDetailDtos;
 	}
 }

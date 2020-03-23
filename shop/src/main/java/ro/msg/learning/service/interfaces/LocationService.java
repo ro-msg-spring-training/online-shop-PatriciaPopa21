@@ -1,14 +1,14 @@
 package ro.msg.learning.service.interfaces;
 
 import java.util.List;
-import java.util.Map;
 
 import ro.msg.learning.entity.Location;
+import ro.msg.learning.entity.OrderDetailDto;
 
 public interface LocationService {
 	Location getProductMostAbundantShippingLocation(Integer productId, Integer quantity);
 
-	Location getSingleShippingLocationForAllProducts(Map<String, Integer> productsAndCorrespondingQuantities);
+	Location getSingleShippingLocationForAllProducts(List<OrderDetailDto> orderDetailDtos);
 
 	List<Location> getAllLocations();
 

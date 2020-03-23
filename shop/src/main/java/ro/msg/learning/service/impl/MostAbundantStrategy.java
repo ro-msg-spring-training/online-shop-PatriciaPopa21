@@ -2,13 +2,13 @@ package ro.msg.learning.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import ro.msg.learning.dto.OrderDto;
 import ro.msg.learning.entity.Location;
 import ro.msg.learning.entity.OrderDetail;
+import ro.msg.learning.entity.OrderDetailDto;
 import ro.msg.learning.entity.Product;
 import ro.msg.learning.repository.OrderDetailRepository;
 import ro.msg.learning.service.interfaces.LocationService;
@@ -18,6 +18,8 @@ import ro.msg.learning.service.interfaces.StockService;
 
 @Service
 public class MostAbundantStrategy extends OrderDetailService {
+
+	private static final String MOST_ABUNDANT = "most_abundant";
 
 	public MostAbundantStrategy(final LocationService locationService, final ProductService productService,
 			final OrderDetailRepository orderDetailRepository, final StockService stockService) {
@@ -29,19 +31,18 @@ public class MostAbundantStrategy extends OrderDetailService {
 
 	@Override
 	public String getName() {
-		return "most_abundant";
+		return MOST_ABUNDANT;
 	}
 
 	@Override
 	protected List<OrderDetail> generateOrderDetails(final OrderDto orderDto) {
 		final List<OrderDetail> orderDetails = new ArrayList<>();
 
-		final Map<String, Integer> productsAndCorrespondingQuantities = orderDto
-				.getProductsAndCorrespondingQuantities();
+		final List<OrderDetailDto> orderDetailDtos = orderDto.getOrderDetailDtos();
 
-		for (final String productIdAsString : productsAndCorrespondingQuantities.keySet()) {
-			final Integer productId = Integer.parseInt(productIdAsString);
-			final Integer quantity = productsAndCorrespondingQuantities.get(productIdAsString);
+		for (final OrderDetailDto orderDetailDto : orderDetailDtos) {
+			final Integer productId = orderDetailDto.getProductId();
+			final Integer quantity = orderDetailDto.getQuantity();
 			final Location shippingLocation = locationService.getProductMostAbundantShippingLocation(productId,
 					quantity);
 			final Product product = productService.getProduct(productId).get();

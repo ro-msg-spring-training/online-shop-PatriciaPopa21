@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,9 @@ import ro.msg.learning.entity.Address;
 import ro.msg.learning.entity.Location;
 import ro.msg.learning.entity.LocationWithDistance;
 import ro.msg.learning.entity.OrderDetail;
+import ro.msg.learning.entity.OrderDetailDto;
 import ro.msg.learning.entity.Product;
-import ro.msg.learning.exception.SuitableShippingLocationNotFoundException;
+import ro.msg.learning.exception.InsufficientStockException;
 import ro.msg.learning.repository.OrderDetailRepository;
 import ro.msg.learning.service.interfaces.LocationService;
 import ro.msg.learning.service.interfaces.OrderDetailService;
@@ -36,6 +38,7 @@ import ro.msg.learning.service.interfaces.StockService;
 @Service
 public class ClosestLocationStrategy extends OrderDetailService {
 
+	private static final String CLOSEST_LOCATION = "closest_location";
 	private static final String DOUBLE_QUOTE = "\"";
 	private static final String SEPARATOR = ", ";
 	private static final String POSTFIX = " ], \"options\": { \"allToAll\": false, \"manyToOne\" : true } }";
@@ -53,19 +56,17 @@ public class ClosestLocationStrategy extends OrderDetailService {
 
 	@Override
 	public String getName() {
-		return "closest_location";
+		return CLOSEST_LOCATION;
 	}
 
 	@Override
 	@SneakyThrows
 	protected List<OrderDetail> generateOrderDetails(final OrderDto orderDto) {
-		final Map<String, Integer> productsAndCorrespondingQuantities = orderDto
-				.getProductsAndCorrespondingQuantities();
+		final List<OrderDetailDto> orderDetailDtos = orderDto.getOrderDetailDtos();
 
 		final List<LocationWithDistance> locationsWithDistances = computeLocationProcessingOrder(orderDto);
 
-		final List<OrderDetail> orderDetails = computeOrderDetails(productsAndCorrespondingQuantities,
-				locationsWithDistances);
+		final List<OrderDetail> orderDetails = computeOrderDetails(orderDetailDtos, locationsWithDistances);
 
 		return orderDetails;
 	}
@@ -142,10 +143,9 @@ public class ClosestLocationStrategy extends OrderDetailService {
 	}
 
 	private void validateRequiredProductsAndQuantitiesCanBeShipped(
-			final Map<String, Integer> productsAndCorrespondingQuantities) {
+			final Map<Integer, Integer> productsAndCorrespondingQuantities) {
 		if (!productsAndCorrespondingQuantities.isEmpty()) {
-			throw new SuitableShippingLocationNotFoundException(
-					"Your order couldn't be processed. Not enough products on stock.");
+			throw new InsufficientStockException();
 		}
 	}
 
@@ -190,16 +190,19 @@ public class ClosestLocationStrategy extends OrderDetailService {
 		return formattedAddress;
 	}
 
-	private List<OrderDetail> computeOrderDetails(final Map<String, Integer> productsAndCorrespondingQuantities,
+	private List<OrderDetail> computeOrderDetails(final List<OrderDetailDto> orderDetailDtos,
 			final List<LocationWithDistance> locationsWithDistances) {
 		final List<OrderDetail> orderDetails = new ArrayList<>();
+
+		final Map<Integer, Integer> productsAndCorrespondingQuantities = orderDetailDtos.parallelStream()
+				.collect(Collectors.toMap(OrderDetailDto::getProductId, OrderDetailDto::getQuantity));
 
 		while (!productsAndCorrespondingQuantities.isEmpty() && !locationsWithDistances.isEmpty()) {
 			final LocationWithDistance currentLocation = locationsWithDistances.get(0);
 
-			for (final String productIdAsString : productsAndCorrespondingQuantities.keySet()) {
+			for (final Integer productId : productsAndCorrespondingQuantities.keySet()) {
 				processRequestForCurrentProduct(productsAndCorrespondingQuantities, orderDetails, currentLocation,
-						productIdAsString);
+						productId);
 			}
 
 			locationsWithDistances.remove(currentLocation);
@@ -210,11 +213,9 @@ public class ClosestLocationStrategy extends OrderDetailService {
 		return orderDetails;
 	}
 
-	private void processRequestForCurrentProduct(final Map<String, Integer> productsAndCorrespondingQuantities,
-			final List<OrderDetail> orderDetails, final LocationWithDistance currentLocation,
-			final String productIdAsString) {
-		final Integer productId = Integer.parseInt(productIdAsString);
-		final Integer totalDesiredQuantity = productsAndCorrespondingQuantities.get(productIdAsString);
+	private void processRequestForCurrentProduct(final Map<Integer, Integer> productsAndCorrespondingQuantities,
+			final List<OrderDetail> orderDetails, final LocationWithDistance currentLocation, final Integer productId) {
+		final Integer totalDesiredQuantity = productsAndCorrespondingQuantities.get(productId);
 
 		final Integer actualQuantityTakenFromCurrentLocation = locationService.getWithdrawnQuantity(productId,
 				totalDesiredQuantity, currentLocation.getLocation());
@@ -222,8 +223,8 @@ public class ClosestLocationStrategy extends OrderDetailService {
 		createNewOrderDetailWhenRequired(orderDetails, currentLocation, productId,
 				actualQuantityTakenFromCurrentLocation);
 
-		updateRemainingProductsAndQuantities(productsAndCorrespondingQuantities, productIdAsString,
-				totalDesiredQuantity, actualQuantityTakenFromCurrentLocation);
+		updateRemainingProductsAndQuantities(productsAndCorrespondingQuantities, productId, totalDesiredQuantity,
+				actualQuantityTakenFromCurrentLocation);
 	}
 
 	private void createNewOrderDetailWhenRequired(final List<OrderDetail> orderDetails,
@@ -240,14 +241,14 @@ public class ClosestLocationStrategy extends OrderDetailService {
 		return actualQuantityTakenFromCurrentLocation > 0;
 	}
 
-	private void updateRemainingProductsAndQuantities(final Map<String, Integer> productsAndCorrespondingQuantities,
-			final String productIdAsString, final Integer totalDesiredQuantity,
+	private void updateRemainingProductsAndQuantities(final Map<Integer, Integer> productsAndCorrespondingQuantities,
+			final Integer productId, final Integer totalDesiredQuantity,
 			final Integer actualQuantityTakenFromCurrentLocation) {
 		if (totalDesiredQuantity == actualQuantityTakenFromCurrentLocation) {
-			productsAndCorrespondingQuantities.remove(productIdAsString);
+			productsAndCorrespondingQuantities.remove(productId);
 		} else {
 			final int remainingQuantity = totalDesiredQuantity - actualQuantityTakenFromCurrentLocation;
-			productsAndCorrespondingQuantities.replace(productIdAsString, remainingQuantity);
+			productsAndCorrespondingQuantities.replace(productId, remainingQuantity);
 		}
 	}
 }

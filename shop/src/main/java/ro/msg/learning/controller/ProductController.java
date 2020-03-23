@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +30,7 @@ public class ProductController {
 	private final ProductCategoryService productCategoryService;
 	private final SupplierService supplierService;
 
-	public ProductController(final ProductService productService,
-			@Qualifier("modelMapper") final ModelMapper modelMapper,
+	public ProductController(final ProductService productService, final ModelMapper modelMapper,
 			final ProductCategoryService productCategoryService, final SupplierService supplierService) {
 		this.productService = productService;
 		this.modelMapper = modelMapper;
