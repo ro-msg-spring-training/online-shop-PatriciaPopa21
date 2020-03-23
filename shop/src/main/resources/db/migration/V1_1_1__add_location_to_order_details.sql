@@ -1,0 +1,1 @@
+alter table order_detail add column location_id integer;
