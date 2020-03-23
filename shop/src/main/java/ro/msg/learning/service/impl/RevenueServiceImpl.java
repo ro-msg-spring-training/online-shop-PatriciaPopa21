@@ -1,6 +1,7 @@
 package ro.msg.learning.service.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -46,10 +47,15 @@ public class RevenueServiceImpl implements RevenueService {
 	
 	private void persistTodaysRevenues(final LocalDate todaysDate,
 			final List<ProfitPerLocation> todaysProfitsPerLocation) {
+		
+		final List<Revenue> revenueEntries = new ArrayList<>();
+		
 		for (ProfitPerLocation profitPerLocation : todaysProfitsPerLocation) {
 			final Location location = locationService.getLocation(profitPerLocation.getLocationId());
 			final Revenue newRevenueEntry = new Revenue(location, todaysDate, profitPerLocation.getProfit());
-			revenueRepository.save(newRevenueEntry);
+			revenueEntries.add(newRevenueEntry);
 		}
+		
+		revenueRepository.saveAll(revenueEntries);
 	}
 }
