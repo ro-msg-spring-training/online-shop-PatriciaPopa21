@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ro.msg.learning.dto.ProductDto;
 import ro.msg.learning.entity.Product;
-import ro.msg.learning.entity.ProductCategory;
-import ro.msg.learning.entity.Supplier;
 import ro.msg.learning.service.interfaces.ProductCategoryService;
 import ro.msg.learning.service.interfaces.ProductService;
 import ro.msg.learning.service.interfaces.SupplierService;
@@ -75,14 +73,6 @@ public class ProductController {
 	}
 
 	private Product convertToEntity(final ProductDto productDto) {
-		final ProductCategory productCategory = productCategoryService.getProductCategory(productDto.getCategoryId())
-				.get();
-		final Supplier supplier = supplierService.getSupplier(productDto.getSupplierId()).get();
-
-		final Product entity = modelMapper.map(productDto, Product.class);
-		entity.setCategory(productCategory);
-		entity.setSupplier(supplier);
-
-		return entity;
+		return modelMapper.map(productDto, Product.class);
 	}
 }

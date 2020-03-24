@@ -71,10 +71,10 @@ public class LocationPickingStrategyWithActualDBTests {
 		entityManager.refresh(location2);
 
 		entityManager.persist(productCategory1);
-		entityManager.persist(productCategory1);
+		entityManager.persist(productCategory2);
 
 		entityManager.refresh(productCategory1);
-		entityManager.refresh(productCategory1);
+		entityManager.refresh(productCategory2);
 
 		entityManager.persist(supplier1);
 		entityManager.persist(supplier2);
