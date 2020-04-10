@@ -12,6 +12,8 @@ import ro.msg.learning.dto.OrderDto;
 import ro.msg.learning.entity.Customer;
 import ro.msg.learning.entity.Order;
 import ro.msg.learning.entity.OrderDetail;
+import ro.msg.learning.entity.OrderDetailDto;
+import ro.msg.learning.exception.EmptyShoppingCartException;
 import ro.msg.learning.repository.OrderRepository;
 import ro.msg.learning.service.interfaces.CustomerService;
 import ro.msg.learning.service.interfaces.OrderDetailService;
@@ -27,15 +29,21 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	@Transactional
 	public OrderDto createOrder(final OrderDto orderDto) {
+		validateShoppingCartNotEmpty(orderDto.getOrderDetailDtos());
+		
 		final List<OrderDetail> orderDetails = orderDetailService.obtainOrderDetails(orderDto);
 		
-		Customer customer = customerService.getCustomer(orderDto.getCustomerId()).get();
+		Customer customer = customerService.getCustomerById(orderDto.getCustomerId()).get();
 		final Order orderCreated = new Order(null, customer, orderDto.getCreatedAt(), orderDto.getAddress());
 		orderRepository.save(orderCreated);
-		
 		orderDetailService.addOrderToOrderDetails(orderCreated, orderDetails);
 		
 		return orderDto;
 	}
 
+	private void validateShoppingCartNotEmpty(List<OrderDetailDto> orderDetailDtos) {
+		if(orderDetailDtos.isEmpty()) {
+			throw new EmptyShoppingCartException();
+		}
+	}
 }

@@ -1,0 +1,47 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+
+<head>
+    <style>
+        thead {
+            color: green;
+        }
+        
+        tbody {
+            color: blue;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+	<h1>Shopping Cart</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="orderDetail: ${orderDto.orderDetailDtos}">
+            	<td th:text="${orderDetail.productId}" />
+            	<td th:text="${orderDetail.quantity}" />
+            </tr>
+        </tbody>
+    </table>
+    
+    <form th:action="@{/proceed/v2}" method="GET">
+    	<div class="form-actions" th:if="${not #lists.isEmpty(orderDto.orderDetailDtos)}">
+  			<button type="submit" class="btn">Proceed with order</button>
+    	</div>
+    </form>
+</body>
+
+</html>

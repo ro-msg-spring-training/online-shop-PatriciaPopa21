@@ -1,0 +1,59 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+
+<head>
+    <style>
+        thead {
+            color: green;
+        }
+        
+        tbody {
+            color: blue;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+	<h1>Product Details</h1>
+
+    <table>
+        <thead>
+            <tr>
+            	<th style="display:none;">Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Weight</th>
+                <th>Category</th>
+                <th>Supplier</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            	<td style="display:none;" th:text="${product.id}" />
+                <td th:text="${product.productName}" />
+                <td th:text="${product.productDescription}" />
+                <td th:text="${product.price}" />
+                <td th:text="${product.weight}" />
+                <td th:text="${product.category.categoryName}" />
+                <td th:text="${product.supplier.supplierName}" />
+            </tr>
+        </tbody>
+    </table>
+    
+    <form th:action="@{/shoppingcart}" method="POST" th:object="${orderDetailDto}">
+    	<p><input type="hidden" th:value="${product.id}" th:field="*{productId}" readonly/></p>
+    	<p>Quantity: <input type="number" th:value="1" th:min=1 th:field="*{quantity}"/></p>
+    	<div class="form-actions">
+  			<button type="submit" class="btn">Add to cart</button>
+    	</div>
+    </form>
+</body>
+
+</html>

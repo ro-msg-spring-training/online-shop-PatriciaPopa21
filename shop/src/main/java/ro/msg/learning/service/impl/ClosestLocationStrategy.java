@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -200,9 +201,10 @@ public class ClosestLocationStrategy extends OrderDetailService {
 		while (!productsAndCorrespondingQuantities.isEmpty() && !locationsWithDistances.isEmpty()) {
 			final LocationWithDistance currentLocation = locationsWithDistances.get(0);
 
-			for (final Integer productId : productsAndCorrespondingQuantities.keySet()) {
+			final Iterator<Integer> iter = productsAndCorrespondingQuantities.keySet().iterator();
+			while (iter.hasNext()) {
 				processRequestForCurrentProduct(productsAndCorrespondingQuantities, orderDetails, currentLocation,
-						productId);
+						iter);
 			}
 
 			locationsWithDistances.remove(currentLocation);
@@ -214,7 +216,10 @@ public class ClosestLocationStrategy extends OrderDetailService {
 	}
 
 	private void processRequestForCurrentProduct(final Map<Integer, Integer> productsAndCorrespondingQuantities,
-			final List<OrderDetail> orderDetails, final LocationWithDistance currentLocation, final Integer productId) {
+			final List<OrderDetail> orderDetails, final LocationWithDistance currentLocation,
+			final Iterator<Integer> iter) {
+		final Integer productId = iter.next();
+
 		final Integer totalDesiredQuantity = productsAndCorrespondingQuantities.get(productId);
 
 		final Integer actualQuantityTakenFromCurrentLocation = locationService.getWithdrawnQuantity(productId,
@@ -224,28 +229,26 @@ public class ClosestLocationStrategy extends OrderDetailService {
 				actualQuantityTakenFromCurrentLocation);
 
 		updateRemainingProductsAndQuantities(productsAndCorrespondingQuantities, productId, totalDesiredQuantity,
-				actualQuantityTakenFromCurrentLocation);
+				actualQuantityTakenFromCurrentLocation, iter);
 	}
 
 	private void createNewOrderDetailWhenRequired(final List<OrderDetail> orderDetails,
 			final LocationWithDistance currentLocation, final Integer productId,
 			final Integer actualQuantityTakenFromCurrentLocation) {
-		if (productWasAvailable(actualQuantityTakenFromCurrentLocation)) {
+		final boolean productWasAvailable = actualQuantityTakenFromCurrentLocation > 0;
+
+		if (productWasAvailable) {
 			final Product product = productService.getProduct(productId).get();
 			final Location location = currentLocation.getLocation();
 			orderDetails.add(new OrderDetail(null, product, location, actualQuantityTakenFromCurrentLocation));
 		}
 	}
 
-	private boolean productWasAvailable(final Integer actualQuantityTakenFromCurrentLocation) {
-		return actualQuantityTakenFromCurrentLocation > 0;
-	}
-
 	private void updateRemainingProductsAndQuantities(final Map<Integer, Integer> productsAndCorrespondingQuantities,
 			final Integer productId, final Integer totalDesiredQuantity,
-			final Integer actualQuantityTakenFromCurrentLocation) {
+			final Integer actualQuantityTakenFromCurrentLocation, final Iterator<Integer> iter) {
 		if (totalDesiredQuantity == actualQuantityTakenFromCurrentLocation) {
-			productsAndCorrespondingQuantities.remove(productId);
+			iter.remove();
 		} else {
 			final int remainingQuantity = totalDesiredQuantity - actualQuantityTakenFromCurrentLocation;
 			productsAndCorrespondingQuantities.replace(productId, remainingQuantity);

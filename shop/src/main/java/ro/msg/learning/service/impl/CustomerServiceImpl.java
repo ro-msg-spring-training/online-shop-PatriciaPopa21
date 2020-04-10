@@ -15,7 +15,12 @@ public class CustomerServiceImpl implements CustomerService {
 	private final CustomerRepository customerRepository;
 
 	@Override
-	public Optional<Customer> getCustomer(final Integer customerId) {
+	public Optional<Customer> getCustomerById(final Integer customerId) {
 		return customerRepository.findById(customerId);
+	}
+
+	@Override
+	public Customer getCustomerByUsername(final String username) {
+		return customerRepository.findByUsername(username);
 	}
 }

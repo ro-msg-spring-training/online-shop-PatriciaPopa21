@@ -5,5 +5,7 @@ import java.util.Optional;
 import ro.msg.learning.entity.Customer;
 
 public interface CustomerService {
-	Optional<Customer> getCustomer(Integer customerId);
+	Optional<Customer> getCustomerById(Integer customerId);
+
+	Customer getCustomerByUsername(String username);
 }
