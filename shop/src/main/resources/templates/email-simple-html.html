@@ -19,31 +19,25 @@
 </head>
 
 <body>
-
-    <h1>Shopping Cart</h1>
+    <h1> Below is the summary for your order, with order number #[( ${orderId} )] </h1>
 
     <table>
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Product Name</th>
                 <th>Quantity</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="orderDetail: ${orderDetailDtos}">
-                <td>
-                    <a th:href="@{http://localhost:8080/product/v2/(id=${orderDetail.productId},name=${orderDetail.productName})}" th:text="${orderDetail.productName}" />
-                </td>
+            <tr th:each="orderDetail: ${order.orderDetailDtos}">
+                <td th:text="${orderDetail.productName}" />
                 <td th:text="${orderDetail.quantity}" />
             </tr>
         </tbody>
     </table>
 
-    <form th:action="@{/proceed/v2}" method="GET">
-        <div class="form-actions" th:if="${not #lists.isEmpty(orderDetailDtos)}">
-            <button type="submit" class="btn">Proceed with order</button>
-        </div>
-    </form>
+    <br> The address where we will ship the products, as specified by you: [( ${order.address} )]
+
 </body>
 
 </html>

@@ -1,20 +1,18 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
+
 <body>
     <p th:text="'Product added sucessfully!'" />
     <form th:action="@{/shoppingcart}" method="GET">
-    	<div class="form-actions">
-  			<button type="submit" class="btn">See shopping cart</button>
-    	</div>
+        <div class="form-actions">
+            <button type="submit" class="btn">See shopping cart</button>
+        </div>
     </form>
     <form th:action="@{/products/v2}" method="GET">
-    	<div class="form-actions">
-  			<button type="submit" class="btn">Continue shopping</button>
-    	</div>
+        <div class="form-actions">
+            <button type="submit" class="btn">Continue shopping</button>
+        </div>
     </form>
 </body>
+
 </html>

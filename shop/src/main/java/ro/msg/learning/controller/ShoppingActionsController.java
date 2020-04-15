@@ -45,29 +45,31 @@ public class ShoppingActionsController {
 	}
 
 	@GetMapping(value = "/product/v2")
-	public String getProduct(@RequestParam(name = "id") final Integer id, final Model model,
-			final OrderDetailDto orderDetailDto) {
+	public String getProduct(@RequestParam(name = "id") final Integer id,
+			@RequestParam(name = "name") final String name, final Model model) {
 		final Optional<Product> product = productService.getProduct(id);
 
 		if (product.isPresent()) {
 			model.addAttribute("product", product.get());
 		}
 
-		model.addAttribute("orderDetailDto", new OrderDetailDto(id, 1));
+		model.addAttribute("orderDetailDto", new OrderDetailDto(id, 1, name));
 
 		return "product";
 	}
 
 	@GetMapping(value = "/shoppingcart")
 	public String getShoppingCart(final Model model) {
-		final OrderDto orderDto = shoppingService.getShoppingCart();
-		model.addAttribute("orderDto", orderDto);
+		final List<OrderDetailDto> orderDetailDtos = shoppingService.getShoppingCart().getOrderDetailDtos();
+		model.addAttribute("orderDetailDtos", orderDetailDtos);
+
 		return "shoppingcart";
 	}
 
 	@PostMapping(value = "/shoppingcart")
 	public String addToShoppingCart(final OrderDetailDto orderDetailDto) {
 		shoppingService.addToShoppingCart(orderDetailDto);
+
 		return "product-added";
 	}
 

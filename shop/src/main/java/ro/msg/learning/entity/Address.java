@@ -27,4 +27,9 @@ public class Address {
 	private String city;
 	private String county;
 	private String streetAddress;
+	
+	@Override
+	public String toString() {
+		return country + ", " + city + ", " + county + ", " + streetAddress;
+	}
 }

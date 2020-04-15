@@ -20,23 +20,22 @@
 
 <body>
 
-	<h1>Products</h1>
+    <h1>Products</h1>
 
     <table>
         <thead>
             <tr>
-            	<th style="display:none;">Id</th>
+                <th style="display:none;">Id</th>
                 <th>Name</th>
                 <th>Category</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="product: ${products}">
-            	<td style="display:none;" th:text="${product.id}" />
-            	<td> 
-                	<a th:href="@{http://localhost:8080/product/v2/(id=${product.id})}" th:text="${product.productName}"/>
+                <td>
+                    <a th:href="@{http://localhost:8080/product/v2/(id=${product.id},name=${product.productName})}" th:text="${product.productName}" />
                 </td>
-            	<td th:text="${product.category.categoryName}" />
+                <td th:text="${product.category.categoryName}" />
             </tr>
         </tbody>
     </table>

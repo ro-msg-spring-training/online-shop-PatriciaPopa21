@@ -20,12 +20,12 @@
 
 <body>
 
-	<h1>Product Details</h1>
+    <h1>Product Details</h1>
 
     <table>
         <thead>
             <tr>
-            	<th style="display:none;">Id</th>
+                <th style="display:none;">Id</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Price</th>
@@ -36,7 +36,7 @@
         </thead>
         <tbody>
             <tr>
-            	<td style="display:none;" th:text="${product.id}" />
+                <td style="display:none;" th:text="${product.id}" />
                 <td th:text="${product.productName}" />
                 <td th:text="${product.productDescription}" />
                 <td th:text="${product.price}" />
@@ -46,13 +46,20 @@
             </tr>
         </tbody>
     </table>
-    
+
     <form th:action="@{/shoppingcart}" method="POST" th:object="${orderDetailDto}">
-    	<p><input type="hidden" th:value="${product.id}" th:field="*{productId}" readonly/></p>
-    	<p>Quantity: <input type="number" th:value="1" th:min=1 th:field="*{quantity}"/></p>
-    	<div class="form-actions">
-  			<button type="submit" class="btn">Add to cart</button>
-    	</div>
+        <p>
+            <input type="hidden" th:value="${product.id}" th:field="*{productId}" readonly/>
+        </p>
+        <p>
+            <input type="hidden" th:value="${product.productName}" th:field="*{productName}" readonly/>
+        </p>
+        <p>Quantity:
+            <input type="number" th:value="1" th:min=1 th:field="*{quantity}" />
+        </p>
+        <div class="form-actions">
+            <button type="submit" class="btn">Add to cart</button>
+        </div>
     </form>
 </body>
 

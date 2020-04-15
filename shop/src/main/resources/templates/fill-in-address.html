@@ -2,16 +2,24 @@
 
 <body>
 
-	<h1>Please enter your address</h1>
+    <h1>Please enter your address</h1>
 
     <form th:action="@{/orders/v2}" method="POST" th:object="${destinationAddress}">
-    	<p>Country: <input type="text" th:field="*{country}" /></p>
-    	<p>City: <input type="text" th:field="*{city}" /></p>
-    	<p>State: <input type="text" th:field="*{county}" /></p>
-    	<p>streetAddress: <input type="text" th:field="*{streetAddress}" /></p>
-    	<div class="form-actions">
-  			<button type="submit" class="btn">Place order</button>
-    	</div>
+        <p>Country:
+            <input type="text" th:field="*{country}" />
+        </p>
+        <p>City:
+            <input type="text" th:field="*{city}" />
+        </p>
+        <p>State:
+            <input type="text" th:field="*{county}" />
+        </p>
+        <p>Street Address:
+            <input type="text" th:field="*{streetAddress}" />
+        </p>
+        <div class="form-actions">
+            <button type="submit" class="btn">Place order</button>
+        </div>
     </form>
 </body>
 
