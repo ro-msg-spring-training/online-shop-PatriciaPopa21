@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+
+<head>
+    <style>
+        thead {
+            color: green;
+        }
+        
+        tbody {
+            color: blue;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Products</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="display:none;">Id</th>
+                <th>Name</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product: ${products}">
+                <td>
+                    <a th:href="@{/product/v2/(id=${product.id},name=${product.productName})}" th:text="${product.productName}" />
+                </td>
+                <td th:text="${product.category.categoryName}" />
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

@@ -29,21 +29,17 @@ public class FormBasedWebSecurityConfiguration extends WebSecurityConfigurerAdap
 	public void configureGlobal(final AuthenticationManagerBuilder auth) throws Exception {
 		final List<CustomerCredentials> allCustomerCredentials = customerCredentialsService.getCredentialsForAllUsers();
 
-		final InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> authenticationConfig = auth.inMemoryAuthentication();
+		final InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> authenticationConfig = auth
+				.inMemoryAuthentication();
 
-		allCustomerCredentials.forEach(credentials -> authenticationConfig
-				.withUser(credentials.getUsername())
-				.password(passwordEncoder().encode(credentials.getPassword()))
-				.authorities("ROLE_USER"));
+		allCustomerCredentials.forEach(credentials -> authenticationConfig.withUser(credentials.getUsername())
+				.password(passwordEncoder().encode(credentials.getPassword())).authorities("ROLE_USER"));
 	}
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-		.antMatchers("/securityNone").permitAll()
-		.anyRequest().authenticated()
-		.and()
-		.formLogin();
+		http.authorizeRequests().antMatchers("/securityNone").permitAll().anyRequest().authenticated().and()
+				.formLogin();
 	}
 
 	@Bean

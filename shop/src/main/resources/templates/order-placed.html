@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <p th:text="'Order placed sucessfully!'" />
+    <form th:action="@{/products/v2}" method="GET">
+        <div class="form-actions">
+            <button type="submit" class="btn">Back to home</button>
+        </div>
+    </form>
+</body>
+
+</html>

@@ -7,9 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
+//@EnableAuthorizationServer
+//@EnableResourceServer
 //@EntityScan(basePackages = { "ro.msg.learning.entity" }) // scan JPA entities
 //@EnableJpaRepositories(basePackages = "ro.msg.learning.repository") // scan JPA DAO's
-@EnableScheduling
 public class ShopApplication {
 
 	public static void main(final String[] args) throws FileNotFoundException {

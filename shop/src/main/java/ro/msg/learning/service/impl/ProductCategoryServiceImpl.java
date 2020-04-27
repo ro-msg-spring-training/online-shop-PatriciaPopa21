@@ -13,10 +13,12 @@ import ro.msg.learning.service.interfaces.ProductCategoryService;
 @RequiredArgsConstructor
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 	private final ProductCategoryRepository productCategoryRepository;
+	// private final JDBCProductCategoryRepository jdbcProductCategoryRepository;
 
 	@Override
 	public Optional<ProductCategory> getProductCategory(final Integer id) {
 		return productCategoryRepository.findById(id);
+		// return jdbcProductCategoryRepository.findById(id);
 	}
 
 }

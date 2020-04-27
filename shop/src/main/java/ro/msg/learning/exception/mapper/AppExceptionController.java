@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import ro.msg.learning.exception.EmptyShoppingCartException;
 import ro.msg.learning.exception.InexistentIdException;
 import ro.msg.learning.exception.InsufficientStockException;
 import ro.msg.learning.exception.SuitableShippingLocationNotFoundException;
@@ -23,6 +24,11 @@ public class AppExceptionController {
 
 	@ExceptionHandler(value = { InexistentIdException.class })
 	public ResponseEntity<Object> exception(final InexistentIdException exception) {
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(value = { EmptyShoppingCartException.class })
+	public ResponseEntity<Object> exception(final EmptyShoppingCartException exception) {
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 }

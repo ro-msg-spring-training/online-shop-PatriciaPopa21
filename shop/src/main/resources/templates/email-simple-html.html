@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+
+<head>
+    <style>
+        thead {
+            color: green;
+        }
+        
+        tbody {
+            color: blue;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1> Below is the summary for your order, with order number #[( ${orderId} )] </h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="orderDetail: ${order.orderDetailDtos}">
+                <td th:text="${orderDetail.productName}" />
+                <td th:text="${orderDetail.quantity}" />
+            </tr>
+        </tbody>
+    </table>
+
+    <br> The address where we will ship the products, as specified by you: [( ${order.address} )]
+
+</body>
+
+</html>

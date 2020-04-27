@@ -14,36 +14,42 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import ro.msg.learning.entity.CustomerCredentials;
 import ro.msg.learning.service.interfaces.CustomerCredentialsService;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
-@Profile("http-basic")
-public class HttpBasicWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-	private final CustomerCredentialsService customerCredentialsService;
+@AllArgsConstructor
+@Profile("thymeleaf-form")
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+	private CustomerCredentialsService customerCredentialsService;
 
 	@Autowired
 	public void configureGlobal(final AuthenticationManagerBuilder auth) throws Exception {
 		final List<CustomerCredentials> allCustomerCredentials = customerCredentialsService.getCredentialsForAllUsers();
 
-		final InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> authenticationConfig = auth
+		final InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> userDetailsManager = auth
 				.inMemoryAuthentication();
 
-		allCustomerCredentials.forEach(credentials -> authenticationConfig.withUser(credentials.getUsername())
-				.password(passwordEncoder().encode(credentials.getPassword())).authorities("ROLE_USER"));
+		registerCredentialsWithUserDetailsManager(allCustomerCredentials, userDetailsManager);
 	}
 
-	@Override
-	protected void configure(final HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/securityNone").permitAll().anyRequest().authenticated()
-				.and().httpBasic();
+	private void registerCredentialsWithUserDetailsManager(final List<CustomerCredentials> allCustomerCredentials,
+			final InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> authenticationConfig) {
+		allCustomerCredentials.forEach(credentials -> authenticationConfig.withUser(credentials.getUsername())
+				.password(passwordEncoder().encode(credentials.getPassword())).authorities("ROLE_USER"));
 	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Override
+	protected void configure(final HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/resources/**").permitAll().anyRequest().authenticated().and().formLogin()
+				.loginPage("/login").permitAll().and().logout().permitAll();
 	}
 }
