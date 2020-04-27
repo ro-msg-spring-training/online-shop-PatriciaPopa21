@@ -33,8 +33,7 @@ public class EmailService {
 	 * Send plain TEXT mail
 	 */
 	@SneakyThrows
-	public void sendTextMail(final String recipent, final OrderDto orderDto, final Integer orderId)
-			{
+	public void sendTextMail(final String recipent, final OrderDto orderDto, final Integer orderId){
 
 		final Context ctx = prepareEvaluationContext(orderDto, orderId);
 

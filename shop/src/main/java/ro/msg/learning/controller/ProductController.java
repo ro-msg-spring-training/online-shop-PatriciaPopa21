@@ -25,15 +25,11 @@ import ro.msg.learning.service.interfaces.SupplierService;
 public class ProductController {
 	private final ProductService productService;
 	private final ModelMapper modelMapper;
-	private final ProductCategoryService productCategoryService;
-	private final SupplierService supplierService;
 
 	public ProductController(final ProductService productService, final ModelMapper modelMapper,
 			final ProductCategoryService productCategoryService, final SupplierService supplierService) {
 		this.productService = productService;
 		this.modelMapper = modelMapper;
-		this.productCategoryService = productCategoryService;
-		this.supplierService = supplierService;
 	}
 
 	@GetMapping(path = "/products", produces = "application/json")
