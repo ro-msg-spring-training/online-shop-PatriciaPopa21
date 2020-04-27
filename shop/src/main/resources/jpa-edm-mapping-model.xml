@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+     <JPAEDMMappingModel xmlns="http://www.apache.org/olingo/odata2/jpa/processor/api/model/mapping">
+        <PersistenceUnit name="shop">
+          <EDMSchemaNamespace>Shop</EDMSchemaNamespace> 
+          <JPAEntityTypes>
+            <JPAEntityType name="Product">
+              <EDMEntityType>Product</EDMEntityType> 
+              <EDMEntitySet>Products</EDMEntitySet> 
+              <JPAAttributes>
+              	<JPAAttribute name="id">Id</JPAAttribute> 
+                <!-- <JPAAttribute name="productName">ProductName</JPAAttribute> 
+                <JPAAttribute name="productDescription">ProductDescription</JPAAttribute> 
+                <JPAAttribute name="price">Price</JPAAttribute> 
+                <JPAAttribute name="weight">Weight</JPAAttribute> -->
+                <JPAAttribute name="imageUrl">ImageUrl</JPAAttribute> 
+              </JPAAttributes>
+              <!--  <JPARelationships>
+                <JPARelationship name="category">Category</JPARelationship> 
+                <JPARelationship name="supplier">Supplier</JPARelationship> 
+              </JPARelationships> -->
+            </JPAEntityType>
+           </JPAEntityTypes>
+        </PersistenceUnit>
+      </JPAEDMMappingModel>
