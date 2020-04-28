@@ -1,19 +1,22 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
 
 <body>
+	<p th:text="'Are you sure you want to logout?'" />
     <div tiles:fragment="content">
         <form name="logout" th:action="@{/logout}" method="post">
-            <fieldset>
-                <legend>Logout</legend>
                 <div th:if="${param.error}" class="alert alert-error">
                     Something went wrong. We couldn't log you out.
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn">Logout</button>
+                    <button type="submit" class="btn">Yes</button>
                 </div>
-            </fieldset>
         </form>
     </div>
+    <form th:action="@{/homepage}" method="GET">
+        <div class="form-actions">
+            <button type="submit" class="btn">No</button>
+        </div>
+    </form>
 </body>
 
 </html>
