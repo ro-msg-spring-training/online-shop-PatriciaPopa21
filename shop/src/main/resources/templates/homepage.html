@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <p th:text="'Welcome to the online shop. What would you like to do?'" />
+    <form th:action="@{/logout}" method="GET">
+        <div class="form-actions">
+            <button type="submit" class="btn">Logout</button>
+        </div>
+    </form>
+    <form th:action="@{/products/v2}" method="GET">
+        <div class="form-actions">
+            <button type="submit" class="btn">Browse products list</button>
+        </div>
+    </form>
+    <form th:action="@{/shoppingcart}" method="GET">
+        <div class="form-actions">
+            <button type="submit" class="btn">See shopping cart</button>
+        </div>
+    </form>
+</body>
+
+</html>

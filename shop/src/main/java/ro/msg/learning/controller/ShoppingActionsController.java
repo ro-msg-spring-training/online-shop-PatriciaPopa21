@@ -10,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.AllArgsConstructor;
 import ro.msg.learning.dto.OrderDto;
 import ro.msg.learning.entity.Address;
 import ro.msg.learning.entity.Customer;
@@ -23,18 +25,16 @@ import ro.msg.learning.service.interfaces.ProductService;
 import ro.msg.learning.service.interfaces.ShoppingService;
 
 @Controller
+@AllArgsConstructor
 public class ShoppingActionsController {
-	private ProductService productService;
-	private ShoppingService shoppingService;
-	private CustomerService customerService;
-	private OrderService orderService;
+	private final ProductService productService;
+	private final ShoppingService shoppingService;
+	private final CustomerService customerService;
+	private final OrderService orderService;
 
-	public ShoppingActionsController(final ProductService productService, final ShoppingService shoppingService,
-			final CustomerService customerService, final OrderService orderService) {
-		this.productService = productService;
-		this.shoppingService = shoppingService;
-		this.customerService = customerService;
-		this.orderService = orderService;
+	@GetMapping(value = "/homepage")
+	public String homepage() {
+		return "homepage";
 	}
 
 	@GetMapping(value = "/products/v2")
@@ -81,20 +81,24 @@ public class ShoppingActionsController {
 	}
 
 	@PostMapping(value = "/orders/v2")
-	// @ResponseStatus(HttpStatus.CREATED)
 	public String createOrder(final Address destinationAddress) {
 
-		final OrderDto orderDto = shoppingService.getShoppingCart();
-		orderDto.setAddress(destinationAddress);
-		orderDto.setCreatedAt(LocalDateTime.now());
-		final Customer customer = customerService.getCustomerByUsername(getCurrentLoggedInUsername());
-		orderDto.setCustomerId(customer.getId());
+		final OrderDto orderDto = createOrderDto(destinationAddress);
 
 		orderService.createOrder(orderDto);
 
 		shoppingService.clearShoppingCart();
 
 		return "order-placed";
+	}
+
+	private OrderDto createOrderDto(final Address destinationAddress) {
+		final OrderDto orderDto = shoppingService.getShoppingCart();
+		orderDto.setAddress(destinationAddress);
+		orderDto.setCreatedAt(LocalDateTime.now());
+		final Customer customer = customerService.getCustomerByUsername(getCurrentLoggedInUsername());
+		orderDto.setCustomerId(customer.getId());
+		return orderDto;
 	}
 
 	private String getCurrentLoggedInUsername() {
